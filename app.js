@@ -1,11 +1,15 @@
 const canvas = document.getElementById("jsCanvas")
 const ctx = canvas.getContext("2d")
+const colors = document.getElementsByClassName("jsColor")
+const range = document.getElementById("jsRange")
+const mode = document.getElementById("jsMode")
 
 ctx.strokeStyle = "#2c2c2c"
 ctx.lineWidth = 2.5
 
 
 let painting = false;
+let filling = false;
 
 // 페인팅을 그만!을 따로 만들어서
 function stopPainting(){
@@ -34,15 +38,34 @@ function onMouseMove(event){
 }
 
 // 클릭을 하는 순간부터!!
-function onMouseDown(event){
-    paingting = true
-}
+// function onMouseDown(event){
+//     paingting = true
+// }
 
 // 캔버스 밖으로 벗어나도 false
 function onMouseLeave(event){
     stopPainting()
 }
 
+function handlecolorClick(event){
+    const color = event.target.style.backgroundColor;
+    ctx.strokeStyle = color;
+}
+
+function handleRangeChange(event){
+    const size = event.target.value;
+    ctx.lineWidth = size;
+}
+
+function handleModeClick(){
+    if(filling === true){
+        filling = false;
+        mode.innerText = "FILL"
+    } else {
+        filling = true
+        mode.innerText = "PAINT"
+    }
+}
 
 if(canvas){
     canvas.addEventListener("mousemove", onMouseMove)
@@ -51,3 +74,15 @@ if(canvas){
     canvas.addEventListener("mouseleave", stopPainting)
 }
 // 캔버스 안에서 마우스가 움직이면!!
+
+Array.from(colors).forEach(color => 
+    color.addEventListener("click", handlecolorClick)
+)
+
+if(range){
+    range.addEventListener("input", handleRangeChange)
+}
+
+if(mode){
+    mode.addEventListener("click", handleModeClick)
+}
